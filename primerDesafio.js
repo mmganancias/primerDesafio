@@ -45,6 +45,32 @@ class ManagerEventos {
     if (!evento) throw new Error(`El evento con id ${idEvento} no existe`);
     evento.agregarParticipante(idUsuario);
   }
+
+asPOJO(){
+  return {
+    id: this.id,
+  nombre: this.nombre,
+  lugar: this.lugar,
+  precio: this.precio,
+  capacidad: this.capacidad,
+  fecha: this.fecha,
+  participantes:this.parcitipantes,
+  }
+}
+
+ponerEventoEnGira({ idEvento, nuevaLocalidad, nuevaFecha }) {
+  const eventoOriginal = this.#eventos.find(e => e.id === idEvento)
+  if (!eventoOriginal) throw new Error(`el evento con id ${idEvento} no existe`)
+  const nuevoEvento = new Evento({
+    ...eventoOriginal.asPOJO(),
+    id: generarId(),
+    lugar: nuevaLocalidad,
+    fecha: nuevaFecha
+  })
+  this.#eventos.push(nuevoEvento)
+  return nuevoEvento.asPOJO()
+}
+
 }
 
 const em = new ManagerEventos();
@@ -61,5 +87,5 @@ const datosEvento2 = {
   precio: 500,
 };
 
-em.agregarEvento(datosEvento1); // This will automatically get an incremented ID
-em.agregarEvento(datosEvento2); // This will get the next incremented ID
+em.agregarEvento(datosEvento1);
+em.agregarEvento(datosEvento2);
